@@ -9,7 +9,8 @@ extends RefCounted
 static var _cache: Dictionary = {}
 
 
-static func _get(key: StringName, id: StringName, params: Dictionary, priority := 0) -> ShaderMaterial:
+## _get — имя занято Object._get(StringName): у статической функции другая подпись.
+static func _cached(key: StringName, id: StringName, params: Dictionary, priority := 0) -> ShaderMaterial:
 	if _cache.has(key):
 		var cached = _cache[key]
 		if cached != null:
@@ -25,7 +26,7 @@ static func reset() -> void:
 
 ## Мокрый кафель палат: холодный, скользкий, с грязью в швах.
 static func tile_floor() -> ShaderMaterial:
-	return _get(&"tile_floor", &"wet_tile", {
+	return _cached(&"tile_floor", &"wet_tile", {
 		"uv_scale": Vector2(3.4, 3.4),
 		"grout_width": 0.028,
 		"grout_dirt": 0.78,
@@ -40,7 +41,7 @@ static func tile_floor() -> ShaderMaterial:
 
 ## Кафель на стене: тот же шейдер, другой масштаб и меньше воды.
 static func tile_wall() -> ShaderMaterial:
-	return _get(&"tile_wall", &"wet_tile", {
+	return _cached(&"tile_wall", &"wet_tile", {
 		"uv_scale": Vector2(3.2, 3.2),
 		"grout_width": 0.03,
 		"grout_dirt": 0.6,
@@ -56,7 +57,7 @@ static func tile_wall() -> ShaderMaterial:
 
 ## Крашеная стена над кафелем — «масляная краска» больничного коридора.
 static func painted_wall() -> ShaderMaterial:
-	return _get(&"painted_wall", &"wet_tile", {
+	return _cached(&"painted_wall", &"wet_tile", {
 		"uv_scale": Vector2(0.8, 0.8),
 		"tile_size": Vector2(1.4, 1.4),
 		"grout_width": 0.008,
@@ -72,7 +73,7 @@ static func painted_wall() -> ShaderMaterial:
 
 
 static func concrete() -> ShaderMaterial:
-	return _get(&"concrete", &"wet_tile", {
+	return _cached(&"concrete", &"wet_tile", {
 		"uv_scale": Vector2(0.6, 0.6),
 		"tile_size": Vector2(2.0, 2.0),
 		"grout_width": 0.004,
@@ -87,7 +88,7 @@ static func concrete() -> ShaderMaterial:
 
 ## Шлифованный металл: рамы каталок, поручни, штативы.
 static func metal() -> ShaderMaterial:
-	return _get(&"metal", &"hands_reveal", {
+	return _cached(&"metal", &"hands_reveal", {
 		"skin_tone": Color(0.58, 0.60, 0.63),
 		"skin_deep": Color(0.30, 0.31, 0.33),
 		"dirt_amount": 0.42,
@@ -101,7 +102,7 @@ static func metal() -> ShaderMaterial:
 
 ## Крашеный металл корпусов: мониторы, тумбы, двери.
 static func painted_metal() -> ShaderMaterial:
-	return _get(&"painted_metal", &"hands_reveal", {
+	return _cached(&"painted_metal", &"hands_reveal", {
 		"skin_tone": Color(0.44, 0.47, 0.47),
 		"skin_deep": Color(0.26, 0.28, 0.28),
 		"dirt_amount": 0.5,
@@ -114,7 +115,7 @@ static func painted_metal() -> ShaderMaterial:
 
 ## Медицинский пластик: корпуса, лотки, вёдра, ручки.
 static func plastic() -> ShaderMaterial:
-	return _get(&"plastic", &"hands_reveal", {
+	return _cached(&"plastic", &"hands_reveal", {
 		"skin_tone": Color(0.76, 0.78, 0.74),
 		"skin_deep": Color(0.62, 0.65, 0.62),
 		"dirt_amount": 0.35,
@@ -128,7 +129,7 @@ static func plastic() -> ShaderMaterial:
 
 ## Резина: колёса каталок, уплотнители дверей, коврики.
 static func rubber() -> ShaderMaterial:
-	return _get(&"rubber", &"hands_reveal", {
+	return _cached(&"rubber", &"hands_reveal", {
 		"skin_tone": Color(0.16, 0.16, 0.17),
 		"skin_deep": Color(0.08, 0.08, 0.09),
 		"dirt_amount": 0.5,
@@ -142,7 +143,7 @@ static func rubber() -> ShaderMaterial:
 ## Медицинская ткань: простыни, халаты, занавеси, марля, ремни.
 static func fabric(tint := Color(0.78, 0.79, 0.76)) -> ShaderMaterial:
 	var key := StringName("fabric_%s" % tint.to_html(false))
-	return _get(key, &"fabric_gauze", {
+	return _cached(key, &"fabric_gauze", {
 		"uv_scale": Vector2(6.0, 6.0),
 		"thread_density": 210.0,
 		"base_color": tint,
@@ -154,7 +155,7 @@ static func fabric(tint := Color(0.78, 0.79, 0.76)) -> ShaderMaterial:
 
 ## Полупрозрачная занавесь вокруг койки.
 static func curtain() -> ShaderMaterial:
-	return _get(&"curtain", &"fabric_gauze", {
+	return _cached(&"curtain", &"fabric_gauze", {
 		"uv_scale": Vector2(4.0, 4.0),
 		"thread_density": 140.0,
 		"base_color": Color(0.66, 0.72, 0.70),
@@ -167,7 +168,7 @@ static func curtain() -> ShaderMaterial:
 
 
 static func glass() -> ShaderMaterial:
-	return _get(&"glass", &"glass_dirt", {
+	return _cached(&"glass", &"glass_dirt", {
 		"refraction": 0.55,
 		"grime": 0.65,
 		"fingerprints": 0.6,
@@ -177,7 +178,7 @@ static func glass() -> ShaderMaterial:
 
 
 static func frosted_glass() -> ShaderMaterial:
-	return _get(&"frosted_glass", &"glass_dirt", {
+	return _cached(&"frosted_glass", &"glass_dirt", {
 		"refraction": 0.8,
 		"grime": 0.4,
 		"fingerprints": 0.35,
@@ -191,7 +192,7 @@ static func frosted_glass() -> ShaderMaterial:
 ## Экран монитора: параметры кардиограммы задаются на месте вызова.
 static func crt(bpm := 68.0, trace := Color(0.35, 1.0, 0.62), flatline := 0.0) -> ShaderMaterial:
 	var key := StringName("crt_%d_%d" % [int(bpm), int(flatline * 100.0)])
-	return _get(key, &"monitor_crt", {
+	return _cached(key, &"monitor_crt", {
 		"bpm": bpm,
 		"trace_color": trace,
 		"flatline": flatline,

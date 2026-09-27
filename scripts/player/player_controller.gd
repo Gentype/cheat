@@ -236,7 +236,11 @@ func _update_focus() -> void:
 			if parent != null and parent.enabled:
 				found = parent
 	if found != _focus_interactable:
+		if _focus_interactable != null and is_instance_valid(_focus_interactable):
+			_focus_interactable.set_focus(false)
 		_focus_interactable = found
+		if found != null:
+			found.set_focus(true)
 		interactable_changed.emit(found)
 
 

@@ -51,6 +51,14 @@ jobs:
           grep -q "^OK:" engine-check.log
         timeout-minutes: 15
 
+      - name: Лог проверки движком (артефакт)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-check
+          path: engine-check.log
+          if-no-files-found: ignore
+
       - name: Сохранить лог импорта
         if: always()
         run: |

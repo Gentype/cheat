@@ -18,6 +18,7 @@ signal focus_changed(interactable: Interactable, focused: bool)
 @export var noise := 0.2
 
 var used := false
+var _focused := false
 
 
 func _ready() -> void:
@@ -31,8 +32,6 @@ func _ready() -> void:
 		box.size = Vector3(0.3, 0.3, 0.3)
 		shape.shape = box
 		add_child(shape)
-	focus_entered.connect(_on_focus_entered)
-	focus_exited.connect(_on_focus_exited)
 
 
 func interact(player: PlayerController) -> void:
@@ -50,9 +49,10 @@ func set_enabled(value: bool) -> void:
 		monitorable = false
 
 
-func _on_focus_entered() -> void:
-	focus_changed.emit(self, true)
-
-
-func _on_focus_exited() -> void:
-	focus_changed.emit(self, false)
+## Фокус ставит игрок (луч из головы): у Area3D нет сигналов фокуса, они есть
+## только у Control, поэтому состояние приходит извне — явным вызовом.
+func set_focus(value: bool) -> void:
+	if _focused == value:
+		return
+	_focused = value
+	focus_changed.emit(self, value)
