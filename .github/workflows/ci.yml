@@ -38,8 +38,17 @@ jobs:
 
       - name: Импорт проекта и компиляция шейдеров
         run: |
-          set -euo pipefail
-          python3 tools/check_gdscript.py --lint --godot "./${GODOT_FILE}"
+          set -uo pipefail
+          python3 tools/check_gdscript.py --lint --godot "./${GODOT_FILE}" > engine-check.log 2>&1 || true
+          cat engine-check.log
+          # Логи экшена иногда недоступны, а аннотации видны всегда: выносим
+          # каждую ошибку движка в список проверок GitHub.
+          grep -nE "\[ENGINE\]|\[PARSE\]|\[LINT\]|ERROR|Parse Error|Compile Error" engine-check.log \
+            | head -40 \
+            | while IFS= read -r line; do
+                echo "::error title=Godot::${line:0:400}"
+              done
+          grep -q "^OK:" engine-check.log
         timeout-minutes: 15
 
       - name: Сохранить лог импорта
