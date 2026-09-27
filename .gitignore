@@ -1,0 +1,21 @@
+# Godot 4
+.godot/
+/android/
+export_presets.cfg
+*.translation
+.import/
+export/
+build/
+out/
+
+# Generated credentials / local overrides
+*.local.cfg
+overseer_override.cfg
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+.idea/
+.vscode/

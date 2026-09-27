@@ -1,0 +1,93 @@
+name: Проверка проекта
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.3"
+  GODOT_FILE: "Godot_v4.3-stable_linux.x86_64"
+
+jobs:
+  scripts:
+    name: Скрипты и шейдеры
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Установить gdtoolkit
+        run: pip install gdtoolkit
+
+      - name: Парсинг и стиль GDScript
+        run: python3 tools/check_gdscript.py --lint
+
+      - name: Скачать Godot 4.3
+        run: |
+          set -euo pipefail
+          curl -sSL -o godot.zip \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/${GODOT_FILE}.zip"
+          unzip -q godot.zip
+          chmod +x "${GODOT_FILE}"
+          ./${GODOT_FILE} --headless --version
+
+      - name: Импорт проекта и компиляция шейдеров
+        run: |
+          set -uo pipefail
+          python3 tools/check_gdscript.py --lint --godot "./${GODOT_FILE}" > engine-check.log 2>&1 || true
+          cat engine-check.log
+          # Логи экшена иногда недоступны, а аннотации видны всегда: выносим
+          # каждую ошибку движка в список проверок GitHub.
+          grep -nE "\[ENGINE\]|\[PARSE\]|\[LINT\]|ERROR|Parse Error|Compile Error" engine-check.log \
+            | head -40 \
+            | while IFS= read -r line; do
+                echo "::error title=Godot::${line:0:400}"
+              done
+          grep -q "^OK:" engine-check.log
+        timeout-minutes: 15
+
+      - name: Лог проверки движком (артефакт)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-check
+          path: engine-check.log
+          if-no-files-found: ignore
+
+      - name: Сохранить лог импорта
+        if: always()
+        run: |
+          if [ -f .godot/editor/editor.log ]; then
+            tail -n 200 .godot/editor/editor.log || true
+          fi
+
+  godot-import:
+    name: Полный импорт (без линтера)
+    runs-on: ubuntu-latest
+    needs: scripts
+    steps:
+      - uses: actions/checkout@v4
+      - name: Скачать Godot 4.3
+        run: |
+          set -euo pipefail
+          curl -sSL -o godot.zip \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/${GODOT_FILE}.zip"
+          unzip -q godot.zip
+          chmod +x "${GODOT_FILE}"
+      - name: Импорт ассетов
+        run: |
+          set -euo pipefail
+          ./${GODOT_FILE} --headless --path . --import --quit
+      - name: Загрузить лог
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-logs
+          path: |
+            .godot/editor/editor.log
+          if-no-files-found: ignore

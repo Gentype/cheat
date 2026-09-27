@@ -1,0 +1,18 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Mydriasis studio mark: sclera held open by pale anatomical fingers, fixed dilated pupil. -->
+  <rect width="128" height="128" fill="#07080a"/>
+  <g fill="#e8e3d8">
+    <path d="M64 26c22 0 38 16 44 30 3 7 3 9 0 16-6 14-22 30-44 30S26 86 20 72c-3-7-3-9 0-16 6-14 22-30 44-30zm0 12c-16 0-29 12-34 23-2 5-2 6 0 10 5 11 18 23 34 23s29-12 34-23c2-4 2-5 0-10-5-11-18-23-34-23z"/>
+    <circle cx="64" cy="64" r="19" fill="#0b0c0e"/>
+  </g>
+  <!-- highlighting glint on the fixed pupil -->
+  <circle cx="56" cy="56" r="3" fill="#f4efe6" opacity="0.85"/>
+  <g fill="#cfc7b8">
+    <path d="M30 22c4-2 8 0 10 4l10 18c2 4 0 8-4 9s-8-1-9-5L27 31c-2-4 0-8 3-9z"/>
+    <path d="M98 22c-4-2-8 0-10 4L78 44c-2 4 0 8 4 9s8-1 9-5l10-17c2-4 0-8-3-9z"/>
+    <path d="M30 106c4 2 8 0 10-4l10-18c2-4 0-8-4-9s-8 1-9 5l-10 17c-2 4 0 8 3 9z"/>
+    <path d="M98 106c-4 2-8 0-10-4L78 84c-2-4 0-8 4-9s8 1 9 5l10 17c2 4 0 8-3 9z"/>
+  </g>
+  <rect y="112" width="128" height="16" fill="#07080a"/>
+  <text x="64" y="124" font-family="monospace" font-size="11" letter-spacing="2" text-anchor="middle" fill="#8f8878">MYDRIASIS</text>
+</svg>
