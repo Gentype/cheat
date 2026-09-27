@@ -196,9 +196,11 @@ func _apply_viewport() -> void:
 	viewport.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA if p["screen_space_aa"] else Viewport.SCREEN_SPACE_AA_DISABLED
 	viewport.use_taa = bool(p["taa"])
 	viewport.positional_shadow_atlas_size = _atlas_size()
+	# В 4.3 у Viewport есть только степени деления 1 / 4 / 16 / 64 …: «двойки» нет.
 	viewport.shadow_atlas_quad_0 = Viewport.SHADOW_ATLAS_QUADRANT_SUBDIV_4
-	viewport.shadow_atlas_quad_1 = Viewport.SHADOW_ATLAS_QUADRANT_SUBDIV_2
+	viewport.shadow_atlas_quad_1 = Viewport.SHADOW_ATLAS_QUADRANT_SUBDIV_4
 	viewport.shadow_atlas_quad_2 = Viewport.SHADOW_ATLAS_QUADRANT_SUBDIV_1
+	viewport.shadow_atlas_quad_3 = Viewport.SHADOW_ATLAS_QUADRANT_SUBDIV_1
 
 
 func _atlas_size() -> int:
